@@ -17,7 +17,7 @@ class Client:
 		msg = tkinter.Tk()
 		msg.withdraw()
 
-		self.nickname = simpledialog.askstring("Nickname","Please Choose a nickname", parent=msg)
+		self.nickname = simpledialog.askstring("Nickname", "Please Choose a nickname", parent=msg)
 
 		self.gui_done = False 
 		self.running = True
