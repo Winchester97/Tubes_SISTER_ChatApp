@@ -59,6 +59,40 @@ class Client:
 
 		self.win.mainloop()
 
+		def write(self): #CLEAR message box on server
+		# global message
+		message = f"{self.nickname}: {self.input_area.get('1.0', 'end')}" #get full text
+		# data = json.dumps({'file': True, 'content': str.encode(message)})
+		# self.sock.send(bytes(data, encoding="utf-8"))
+		self.sock.send(message.encode('utf-8'))
+		self.sock.send(message.encode('utf-8'))
+		# self.sock.send(message.encode('utf-8'))
+		self.input_area.delete('1.0', 'end')
+
+		def stop(self):
+			self.running = False
+			self.win.destroy()
+			self.sock.close()
+			exit(0)
+
+		def receive(self):
+			while self.running:
+				try:
+					message = self.sock.recv(BUFFER_SIZE).decode('utf-8')
+					if message == "NICKNAME":
+						self.sock.send(self.nickname.encode('utf-8'))
+					else:
+						if self.gui_done:
+							self.text_area.config(state='normal')
+							self.text_area.insert('end', message) #append message et the end (last string)
+							self.text_area.yview('end') #keep textarea scrolling ke bawah
+							self.text_area.config(state='disabled')
+				except ConnectionAbortedError:
+					break
+				except:
+					print("Error general")
+					self.sock.close()
+					break
 
 #run
 client = Client(HOST,PORT)
